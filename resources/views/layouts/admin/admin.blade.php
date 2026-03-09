@@ -235,8 +235,9 @@
 @stack('styles')
 <style type="text/css">
     .action_crud span {
-        float: left;
-        padding-left: 3px;
+        display: inline-block;
+        margin-right: 6px;
+        vertical-align: middle;
     }
 
     .error {

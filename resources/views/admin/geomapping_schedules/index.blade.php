@@ -66,8 +66,8 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th colspan="13" style="text-align: center; font-size: 22px;">
-                                    KANINI HARAKA GEOMAPPING SCHEDULES
+                                <th colspan="9" style="text-align: center; font-size: 22px;">
+                                    {{ strtoupper($company_name) }} GEOMAPPING SCHEDULES
                                 </th>
                             </tr>
                             <tr>
@@ -79,10 +79,6 @@
                                 <th>Supervisor Contact</th>
                                 <th>Route Manager</th>
                                 <th>Route Manager Contact</th>
-                                <th>Bizwiz Rep</th>
-                                <th>Bizwiz Rep Contact</th>
-                                <th>GA Rep</th>
-                                <th>GA Rep Contact</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -90,7 +86,7 @@
                         <tbody>
                             @foreach ($dates as $index => $date)
                                 <tr>
-                                    <th scope="row" colspan="13" style="font-size: 18px;">{{ $date }}</th>
+                                    <th scope="row" colspan="9" style="font-size: 18px;">{{ $date }}</th>
                                 </tr>
                                 @foreach ($list as $item)
                                     @php
@@ -115,10 +111,6 @@
                                         <td>{{ $item->route_manager_contact }}</td>
                                         <td>{{ $item->supervisor }}</td>
                                         <td>{{ $item->supervisor_contact }}</td>
-                                        <td>{{ $item->bizwiz_rep }}</td>
-                                        <td>{{ $item->bizwiz_rep_contact }}</td>
-                                        <td>{{ $item->golden_africa_rep }}</td>
-                                        <td>{{ $item->golden_africa_rep_contact }}</td>
                                         <td>
                                             <div class="action-button-div">
                                                 <a href="{{ route('geomapping-schedules.show', $item->id) }}" title="Detailed Report"><i class="fas fa-eye fa-lg " style="color: white;"></i></a>
@@ -146,10 +138,6 @@
                                         <td>{{ $item->route_manager_contact }}</td>
                                         <td>{{ $item->supervisor }}</td>
                                         <td>{{ $item->supervisor_contact }}</td>
-                                        <td>{{ $item->bizwiz_rep }}</td>
-                                        <td>{{ $item->bizwiz_rep_contact }}</td>
-                                        <td>{{ $item->golden_africa_rep }}</td>
-                                        <td>{{ $item->golden_africa_rep_contact }}</td>
                                         <td>
                                             <div class="action-button-div">
                                                 <a href="{{ route('geomapping-schedules.show', $item->id) }}" title="Detailed Report"><i class="fas fa-eye fa-lg text-primary"></i></a>

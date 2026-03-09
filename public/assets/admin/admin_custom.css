@@ -319,3 +319,46 @@ fieldset[disabled] .form-control {
       transform: rotate(360deg);
   }
 }
+
+/* Fully hide sidebar when collapsed */
+@media (min-width: 768px) {
+  .sidebar-collapse .main-sidebar {
+    width: 0 !important;
+    -webkit-transform: translate(-230px, 0) !important;
+    -ms-transform: translate(-230px, 0) !important;
+    -o-transform: translate(-230px, 0) !important;
+    transform: translate(-230px, 0) !important;
+    overflow: hidden !important;
+  }
+
+  .sidebar-collapse .content-wrapper,
+  .sidebar-collapse .main-footer,
+  .sidebar-collapse .main-header .navbar {
+    margin-left: 0 !important;
+  }
+
+  .sidebar-collapse .main-header .logo {
+    width: 0 !important;
+    overflow: hidden !important;
+  }
+}
+
+/* Fix action buttons alignment - display horizontally */
+.span-action {
+  display: inline-block !important;
+  margin-right: 8px !important;
+  vertical-align: middle !important;
+}
+
+.span-action:last-child {
+  margin-right: 0 !important;
+}
+
+.span-action a {
+  display: inline-block !important;
+  padding: 4px 6px !important;
+}
+
+.span-action i {
+  font-size: 16px !important;
+}

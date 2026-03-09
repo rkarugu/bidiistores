@@ -141,9 +141,44 @@
 @push('styles')
     <link href="{{ asset('assets/admin/bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
     <style>
+        /* Remove extra padding/margin from content area */
+        .content {
+            padding-left: 0 !important;
+        }
+        
+        .box-body {
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+        }
+        
+        /* Make table responsive and align left */
+        .table-responsive {
+            overflow-x: auto !important;
+            margin-left: 0 !important;
+        }
+        
+        #inventoryItemsDataTable {
+            width: 100% !important;
+            margin-left: 0 !important;
+        }
+        
         .span-action {
-            display: inline-block;
-            margin: 0 3px;
+            display: inline-block !important;
+            margin: 0 3px !important;
+            float: none !important;
+        }
+        
+        /* Force action column to display horizontally */
+        table td:last-child,
+        table td.text-center {
+            white-space: nowrap !important;
+            min-width: 150px !important;
+        }
+        
+        table td:last-child .span-action,
+        table td.text-center .span-action {
+            display: inline-block !important;
+            vertical-align: middle !important;
         }
     </style>
 @endpush
@@ -275,7 +310,7 @@
                         name: 'actions',
                         searchable: false,
                         orderable: false,
-                        width: "100px",
+                        width: "180px",
                         className: 'text-center'
                     },
                 ],

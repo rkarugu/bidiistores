@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Model\DeliveryCentres;
 use App\Model\Restaurant;
 use App\Model\Route;
+use App\Model\Setting;
 use App\Model\WaRouteCustomer;
 use App\Models\GeomappingSchedules;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -76,6 +77,9 @@ class GeomappingSchedulesController extends Controller
             }
         }
         
+        // Get company name from settings
+        $company_name = Setting::where('name', 'COMPANY_NAME')->value('description') ?? config('app.name');
+        
         return view("$this->resource_folder.index", compact(
             'title',
             'model',
@@ -86,6 +90,7 @@ class GeomappingSchedulesController extends Controller
             'logged_user_info',
             'branches',
             'my_permissions',
+            'company_name',
         ));
     }
 
