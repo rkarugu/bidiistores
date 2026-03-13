@@ -271,6 +271,10 @@ return [
 
     'google_maps_api_key' => env('GOOGLE_MAPS_API_KEY', ''),
 
+    'google_maps_map_id' => env('GOOGLE_MAPS_MAP_ID', '8a023462a9950e01'),
+
+    'google_maps_geomapping_map_id' => env('GOOGLE_MAPS_GEOMAPPING_MAP_ID', '7c9bd9e078617725'),
+
     'mpesa_payments_provider' => env('MPESA_PAYMENTS_PROVIDER', 'daraja'),
     'sms_provider' => env('SMS_PROVIDER', 'airtouch'),
 

@@ -253,7 +253,7 @@
                     this.map = new Map(document.getElementById("routes-map"), {
                         center: {lat: -1.28333, lng: 36.81667},
                         zoom: 8,
-                        mapId: "7c9bd9e078617725",
+                        mapId: "{{ config('app.google_maps_geomapping_map_id') }}",
                     });
                 },
 

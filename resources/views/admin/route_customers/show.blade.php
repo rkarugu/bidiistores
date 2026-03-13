@@ -231,7 +231,7 @@
 @endsection
 
 @section('uniquepagescript')
-<script async src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&callback=initMap"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&callback=initMap&v=weekly&loading=async"></script>
 
 <script type="text/javascript">
     $('.reject').on('click', function (event) {
@@ -251,7 +251,7 @@
         const map = new google.maps.Map(document.getElementById("map"), {
             zoom: 15,
             center: { lat: shopLat, lng: shopLng },
-            mapId: "8a023462a9950e01",
+            mapId: "{{ config('app.google_maps_map_id') }}",
         });
  
         const icon = document.createElement("div");
@@ -278,6 +278,8 @@
             infoWindow.open(marker.map, marker);
         });
     }
+
+    window.initMap = initMap;
 </script>
 @endsection
 

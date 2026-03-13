@@ -150,7 +150,7 @@
 @endsection
 
 @section('uniquepagescript')
-    <script async src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&callback=initMap"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&callback=initMap&v=weekly&loading=async"></script>
     {{--    <script async src="https://maps.googleapis.com/maps/api/js?libraries=maps,routes,marker&key={{ $googleMapsApiKey }}&callback=initMap" defer></script>--}}
 
     <script type="text/javascript">
@@ -174,7 +174,7 @@
             const map = new google.maps.Map(document.getElementById("map"), {
                 zoom: 13,
                 center: mapCenter,
-                mapId: "8a023462a9950e01",
+                mapId: "{{ config('app.google_maps_map_id') }}",
             });
 
             // Draw delivery centers
@@ -214,6 +214,8 @@
                 alert("The starting point for this route is not set.\n To display the route plan correctly, please edit this route and set the starting point.");
             }
         }
+
+        window.initMap = initMap;
 
         function drawRouteSections(map, startLat, startLng, endLat, endLng) {
             let sections = JSON.parse('{!! json_encode($route_plan_data['sections']) !!}')

@@ -354,7 +354,7 @@
 @endsection
 
 @section('uniquepagescript')
-    <script async src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&callback=initMap"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&callback=initMap&v=weekly&loading=async"></script>
 
     <script type="text/javascript">
         let map;
@@ -383,7 +383,7 @@
                     lat: shopLat,
                     lng: shopLng
                 },
-                mapId: "8a023462a9950e01",
+                mapId: "{{ config('app.google_maps_map_id') }}",
             });
 
             const icon = document.createElement("div");
@@ -442,6 +442,8 @@
                 infoWindow.open(existingMarker.map, existingMarker);
             });
         }
+
+        window.initMap = initMap;
     </script>
 @endsection
 

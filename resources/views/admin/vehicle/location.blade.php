@@ -73,7 +73,7 @@
 @endsection
 
 @section('uniquepagescript')
-    <script async src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&callback=initMap"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&callback=initMap&v=weekly&loading=async"></script>
 
     <script type="text/javascript">
         let map;
@@ -95,7 +95,7 @@
             const map = new google.maps.Map(document.getElementById("map"), {
                 zoom: 14,
                 center: mapCenter,
-                mapId: "8a023462a9950e01",
+                mapId: "{{ config('app.google_maps_map_id') }}",
             });
 
             const icon = document.createElement("div");

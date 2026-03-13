@@ -432,7 +432,7 @@
 @endsection
 
 @section('uniquepagescript')
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&v=weekly&loading=async"></script>
     <script src="{{ asset('assets/admin/dist/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('assets/admin/bower_components/select2/dist/js/select2.full.min.js') }}"></script>
 
@@ -679,7 +679,7 @@
                 map = new Map(document.getElementById("map"), {
                     zoom: 18,
                     center: position,
-                    mapId: "7c9bd9e078617725",
+                    mapId: "{{ config('app.google_maps_geomapping_map_id') }}",
                 });
                 const markers = new AdvancedMarkerElement({
                     map: map,
