@@ -269,6 +269,20 @@
                                 </a>
                             </li>
                         @endif
+                        @if ($logged_user_info->role_id == 1 || isset($my_permissions['route-merge___view']))
+                            <li class="@if (isset($model) && $model == 'route-merge') active @endif">
+                                <a href="{!! route('route-merge.index') !!}">
+                                    <i class="fa fa-circle"></i> Merge Routes
+                                </a>
+                            </li>
+                        @endif
+                        @if ($logged_user_info->role_id == 1 || isset($my_permissions['route-split___view']))
+                            <li class="@if (isset($model) && $model == 'route-split') active @endif">
+                                <a href="{!! route('route-split.index') !!}">
+                                    <i class="fa fa-circle"></i> Split Routes
+                                </a>
+                            </li>
+                        @endif
 
                     </ul>
                 </li>
@@ -949,13 +963,6 @@
                             class="fa fa-circle"></i>
                         Missing Invoice Numbers
                     </a></li>
-            @endif
-            @if ($logged_user_info->role_id == 1 || isset($my_permissions['route-split___view']))
-                <li class="@if (isset($model) && $model == 'route-split') active @endif">
-                    <a href="{!! route('route-split.index') !!}"><i class="fa fa-circle" aria-hidden="true"></i>
-                        Split Routes
-                    </a>
-                </li>
             @endif
 
             @if ($logged_user_info->role_id == 1 || isset($my_permissions['transaction-mispost___view']))

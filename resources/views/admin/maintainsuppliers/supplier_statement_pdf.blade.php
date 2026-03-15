@@ -225,8 +225,10 @@
                 </table>
             </td>
             <td class="text-right">
+                @if($branch->image)
                 <img src="{{ asset('uploads/restaurants/' . $branch->image) }}" class="img-circle" alt=""
                     style="width:115px; margin-bottom: 10px; display:block">
+                @endif
 
                 <div style="margin-bottom: 5px"><strong>A/C Code:</strong> {{ $supplier->supplier_code }}</div>
                 <div style="margin-bottom: 5px"><strong>A/C Name:</strong> {{ $supplier->name }}</div>

@@ -247,7 +247,7 @@
             mounted() {
                 // Set user role
                 this.selectedRoleId = this.employee.role_id
-                this.userRouteIds = this.employee.route_ids
+                this.userRouteIds = this.normalizeRouteIds(this.employee.route_ids)
 
                 $("#route-id").select2();
                 $("#role-id").select2();
@@ -277,10 +277,26 @@
                     this.filterRoutes(roleId);
                 });
 
+                $("#route-id").on('change', () => {
+                    this.userRouteIds = this.normalizeRouteIds($("#route-id").val());
+                });
+
+                this.syncRouteSelect();
+
                 // let selected_location_id = $("#wa_location_and_store_id").val();
             },
 
             methods: {
+
+                normalizeRouteIds(routeIds) {
+                    return (routeIds || []).map(routeId => parseInt(routeId)).filter(routeId => !isNaN(routeId))
+                },
+
+                syncRouteSelect() {
+                    this.$nextTick(() => {
+                        $("#route-id").val(this.userRouteIds.map(routeId => routeId.toString())).trigger('change.select2');
+                    });
+                },
 
                 fetchRoles() {
                     axios.get('/api/roles').then(response => {
@@ -295,7 +311,6 @@
                     axios.get('/api/routes').then(response => {
                         this.routes = response.data.data
                         this.filterRoutes(this.selectedRoleId)
-                        // $("#route-id").val(this.employee.route_ids)
                     }).catch(error => {
                         // pass for now
                         // TODO: Handle exception
@@ -327,6 +342,8 @@
                                 .userRouteIds.includes(route.id);
                         });
                     }
+
+                    this.syncRouteSelect();
                 },
                 
             },

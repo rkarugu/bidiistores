@@ -282,5 +282,18 @@ return [
     'pesaflow_key' => env('PESAFLOW_KEY', ''),
     'pesaflow_secret' => env('PESAFLOW_SECRET', ''),
     'pesaflow_api_client_id' => env('PESAFLOW_API_CLIENT_ID', ''),
-    'skip_eod_middleware'=>env('SKIP_EOD_MIDDLEWARE', false)
+    'skip_eod_middleware'=>env('SKIP_EOD_MIDDLEWARE', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Trade Agreement Enforcement
+    |--------------------------------------------------------------------------
+    |
+    | This option controls whether the system enforces trade agreement
+    | requirements for purchase orders. When disabled, trade agreement
+    | validation is bypassed and UI is hidden. Set to true to activate.
+    |
+    */
+
+    'use_trade_agreements' => env('USE_TRADE_AGREEMENTS', false),
 ];

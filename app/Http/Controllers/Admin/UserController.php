@@ -1239,17 +1239,7 @@ class UserController extends Controller
                 }
             }
 
-            foreach (($request->route ?? []) as $routeId) {
-                //check if Route has active shift
-                $openShift = SalesmanShift::where([
-                    'status' => 'open',
-                    'route_id' => $routeId
-                ])->first();
-
-                if (!$openShift) {
-                    $row->routes()->attach($routeId);
-                }
-            }
+            $row->routes()->sync($request->input('route', []));
 
             $customerMessage = "Dear " . $request->name . ",you have been created as a user in KHEL Bizwiz platform. Your login credentials are: Username/Email:" . $request->email . " Password: " . $request->password . " link: https://bizwizkaniniharaka.com";
             try {
@@ -1369,7 +1359,17 @@ class UserController extends Controller
                 $row->wa_department_id = $request->wa_department_id;
                 $row->wa_location_and_store_id = $request->wa_location_and_store_id;
 
-                $row->route = @$request->route;
+                $requestedRouteIds = collect($request->input('route', []))
+                    ->filter(function ($routeId) {
+                        return !is_null($routeId) && $routeId !== '';
+                    })
+                    ->map(function ($routeId) {
+                        return (int) $routeId;
+                    })
+                    ->unique()
+                    ->values();
+
+                $row->route = $requestedRouteIds->first();
                 $row->category_id = @$request->category_id;
                 $row->upload_data = @$request->upload_data ? 1 : 0;
                 $row->drop_limit = $request->drop_limit;
@@ -1421,33 +1421,7 @@ class UserController extends Controller
                 }
                 $row->save();
 
-                $userRouteIds = $row->routes->pluck('id');
-                foreach ($userRouteIds as $userRouteId) {
-                    // Check if user has active shift for route
-                    $userOpenShift = SalesmanShift::where([
-                        'status' => 'open',
-                        'route_id' => $userRouteId,
-                        'salesman_id' => $row->id
-                    ])->first();
-                    if (!$userOpenShift) {
-                        $row->routes()->detach($userRouteId);
-                    }
-                }
-
-                if ($request->route) {
-                    foreach ($request->route as $routeId) {
-                        //check if Route has active shift
-                        $openShift = SalesmanShift::where([
-                            'status' => 'open',
-                            'route_id' => $routeId
-                        ])->first();
-
-                        // attach routes to user if they do not have active shifts
-                        if (!$openShift) {
-                            $row->routes()->attach($routeId);
-                        }
-                    }
-                }
+                $row->routes()->sync($requestedRouteIds->all());
                 session()->forget('success');
                 session()->forget('warning');
                 session()->flash('success', 'Record updated successfully.');

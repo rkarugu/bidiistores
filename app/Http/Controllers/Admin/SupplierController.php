@@ -1346,7 +1346,8 @@ class SupplierController extends Controller
                 'suppreference',
                 'description',
                 'total_amount_inc_vat',
-                'created_at'
+                'created_at',
+                'cu_invoice_number'
             )
             ->selectRaw("CONCAT_WS('/', suppreference, description) as full_description")
             ->selectRaw("(CASE WHEN total_amount_inc_vat > 0 THEN total_amount_inc_vat ELSE 0 END) as debit")
@@ -1391,8 +1392,17 @@ class SupplierController extends Controller
             return $item;
         });
 
-        $branch = Restaurant::find(10);
+        $branch = Restaurant::find(auth()->user()->restaurant_id);
         $supplier = WaSupplier::where('supplier_code', $code)->first();
+
+        // Validate that supplier and branch exist
+        if (!$supplier) {
+            return redirect()->back()->withErrors(['error' => 'Supplier not found']);
+        }
+        
+        if (!$branch) {
+            return redirect()->back()->withErrors(['error' => 'Branch not found. Please contact administrator.']);
+        }
 
         $qr_code = QrCode::generate(
             $supplier->supplier_code . " - " . $supplier->name . " - "

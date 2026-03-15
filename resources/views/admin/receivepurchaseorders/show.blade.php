@@ -296,9 +296,9 @@
                                 <th>Description</th>
                                 {{-- <th>Bin Location</th> --}}
                                 <th>LPO QTY</th>
-                                <th>Free Stock</th>
-                                <th>Already Received</th>
-                                <th>In Progress QTY</th>
+                                <th style="display:none;">Free Stock</th>
+                                <th style="display:none;">Already Received</th>
+                                <th style="display:none;">In Progress QTY</th>
                                 <th>This Delivery QTY </th>
                                 <th>Return Qty</th>
                                 <th>Return Reason</th>
@@ -356,10 +356,10 @@
                                             </td> --}}
                                             <td class="align_float_right">{{ $getRelatedItem->supplier_quantity }}
                                             </td>
-                                            <td class="align_float_right">{{ $getRelatedItem->free_qualified_stock }}
+                                            <td class="align_float_right" style="display:none;">{{ $getRelatedItem->free_qualified_stock }}
                                             </td>
-                                            <td class="align_float_right">{{ $getRelatedItem->already_received }}</td>
-                                            <td class="align_float_right">{{ $getRelatedItem->pending_qty }}</td>
+                                            <td class="align_float_right" style="display:none;">{{ $getRelatedItem->already_received }}</td>
+                                            <td class="align_float_right" style="display:none;">{{ $getRelatedItem->pending_qty }}</td>
 
                                             <td>
 

@@ -53,7 +53,7 @@
                                         <label for="price">Price (in Supplier Currency)</label>
                                     </div>
                                     <div class="col-sm-8">
-                                        <input type="number" name="price" id="price" class="form-control" step="any" min="0" placeholder="Price (in Supplier Currency)" aria-describedby="helpId" >
+                                        <input type="number" name="price" id="price" class="form-control" step="any" min="0" placeholder="Price (in Supplier Currency)" aria-describedby="helpId" value="{{ $default_price ?? '' }}">
                                     </div>
                                 </div>
                             </div>
@@ -63,7 +63,7 @@
                                   <label for="price_effective_from">Price Effective From</label>
                                 </div>
                                 <div class="col-sm-8">
-                                  <input type="date" name="price_effective_from" id="price_effective_from" class="form-control" placeholder="Supplier NAME" aria-describedby="helpId">
+                                  <input type="date" name="price_effective_from" id="price_effective_from" class="form-control" placeholder="Supplier NAME" aria-describedby="helpId" value="{{ $default_date ?? date('Y-m-d') }}">
                                 </div>
                             </div>
                             </div>
@@ -126,7 +126,7 @@
                                     <div class="col-sm-3 text-right" style="padding-top:5px">
                                   <label for="supplier_stock_code">Supplier Stock Code</label> </div>
                                 <div class="col-sm-8">
-                                  <input type="text" name="supplier_stock_code" id="supplier_stock_code" class="form-control" placeholder="Supplier Stock Code" aria-describedby="helpId">
+                                  <input type="text" name="supplier_stock_code" id="supplier_stock_code" class="form-control" placeholder="Supplier Stock Code" aria-describedby="helpId" value="{{ $default_supplier_code ?? '' }}">
                                 </div>
                                 </div>
                             </div>
@@ -135,7 +135,7 @@
                                     <div class="col-sm-3 text-right" style="padding-top:5px">
                                   <label for="supplier_stock">Supplier Stock Description</label> </div>
                                 <div class="col-sm-8">
-                                  <input type="text" name="supplier_stock" id="supplier_stock" class="form-control" placeholder="Supplier Stock Description" aria-describedby="helpId">
+                                  <input type="text" name="supplier_stock" id="supplier_stock" class="form-control" placeholder="Supplier Stock Description" aria-describedby="helpId" value="{{ $default_description ?? '' }}">
                                 </div>
                                 </div>
                             </div>
@@ -145,8 +145,8 @@
                                   <label for="">Preferred Supplier</label> </div>
                                 <div class="col-sm-8">
                                     <select name="preferred_supplier" class="form-control" id="">
-                                        <option value="No" selected>No</option>
-                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                        <option value="Yes" selected>Yes</option>
                                     </select>
                                 </div>
                                 </div>

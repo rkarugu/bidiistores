@@ -22,6 +22,11 @@ class TradeAgreementValidator implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        // Skip validation if trade agreements are disabled system-wide
+        if (!config('app.use_trade_agreements', false)) {
+            return;
+        }
+
         $tradeAgreement = TradeAgreement::where([
             'wa_supplier_id' => $value
         ])->first();

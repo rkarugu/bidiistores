@@ -164,6 +164,7 @@ use App\Http\Controllers\Admin\MissingItemssalesReportController;
 use App\Http\Controllers\Admin\Utility\UpdateItemStockCodeController;
 use App\Http\Controllers\Admin\MobileInventoryManagementController;
 use App\Http\Controllers\Admin\RouteSplittingController;
+use App\Http\Controllers\Admin\RouteMergingController;
 use App\Http\Controllers\Admin\ReportedMissingItemsController;
 use App\Http\Controllers\Admin\stockBreakingController;
 use App\Http\Controllers\Admin\ReverseSplitsController;
@@ -2999,6 +3000,13 @@ Route::group(['prefix' => 'delivery-driver', 'as' => 'delivery-driver.', 'middle
     Route::post('process-route-split', [RouteSplittingController::class, 'processRouteSplitting'])->name('route-split.process');
 
     // Route Splitting Utility End
+
+    // Route Merging Utility Start
+
+    Route::get('route-merge', [RouteMergingController::class, 'index'])->name('route-merge.index');
+    Route::post('process-route-merge', [RouteMergingController::class, 'processRouteMerging'])->name('route-merge.process');
+
+    // Route Merging Utility End
 
     // Assign Account to User Start
 

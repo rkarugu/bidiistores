@@ -559,15 +559,13 @@ class UserController extends Controller
                 return response()->json(['status' => false, 'message' => $error], 422);
             }
 
-            $user_name = $request->Email_PhoneNo;
+            $user_name = trim((string) $request->Email_PhoneNo);
             Log::info('mobile_login_attempt', [
                 'Email_PhoneNo' => $user_name,
                 'device_id' => $request->device_id,
                 'device_type' => $request->device_type ?? null,
             ]);
-            $row = User::with(['fingerprints', 'linkedDevice', 'accessRequests', 'routes', 'routes.users'])->where('email', $user_name)
-                ->orWhere('phone_number', $user_name)
-                ->first();
+            $row = $this->findMobileLoginUser($user_name);
             $passwordMatches = $row ? Hash::check($request->password, $row->password) : false;
             Log::info('mobile_login_credential_check', [
                 'user_found' => (bool)$row,
@@ -660,6 +658,66 @@ class UserController extends Controller
         } catch (\Throwable $e) {
             return response()->json(['status' => false, 'message' => 'A server error was encountered.' . $e->getMessage()], 500);
         }
+    }
+
+    private function findMobileLoginUser(string $identifier): ?User
+    {
+        $normalizedIdentifier = trim($identifier);
+        $normalizedEmail = mb_strtolower($normalizedIdentifier);
+        $phoneVariants = $this->getMobileLoginPhoneVariants($normalizedIdentifier);
+        $sanitizedPhoneExpression = "REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(phone_number, ' ', ''), '-', ''), '+', ''), '(', ''), ')', '')";
+
+        return User::with(['fingerprints', 'linkedDevice', 'accessRequests', 'routes', 'routes.users'])
+            ->where(function ($query) use ($normalizedIdentifier, $normalizedEmail, $phoneVariants, $sanitizedPhoneExpression) {
+                $query->whereRaw('LOWER(email) = ?', [$normalizedEmail]);
+
+                if (!empty($phoneVariants)) {
+                    $query->orWhereIn(DB::raw($sanitizedPhoneExpression), $phoneVariants);
+                    $query->orWhereIn('phone_number', $phoneVariants);
+                }
+
+                if ($normalizedIdentifier !== '') {
+                    $query->orWhere('email', $normalizedIdentifier);
+                    $query->orWhere('phone_number', $normalizedIdentifier);
+                }
+            })
+            ->first();
+    }
+
+    private function getMobileLoginPhoneVariants(string $identifier): array
+    {
+        $trimmedIdentifier = trim($identifier);
+        $digitsOnlyIdentifier = preg_replace('/\D+/', '', $trimmedIdentifier);
+
+        if ($digitsOnlyIdentifier === '') {
+            return [];
+        }
+
+        $variants = [
+            $digitsOnlyIdentifier,
+        ];
+
+        $nationalNumber = null;
+
+        if (Str::startsWith($digitsOnlyIdentifier, '254') && strlen($digitsOnlyIdentifier) >= 12) {
+            $nationalNumber = substr($digitsOnlyIdentifier, -9);
+            $variants[] = '0' . $nationalNumber;
+            $variants[] = '254' . $nationalNumber;
+        } elseif (strlen($digitsOnlyIdentifier) === 10 && Str::startsWith($digitsOnlyIdentifier, '0')) {
+            $nationalNumber = substr($digitsOnlyIdentifier, -9);
+            $variants[] = $digitsOnlyIdentifier;
+            $variants[] = '254' . $nationalNumber;
+        } elseif (strlen($digitsOnlyIdentifier) === 9 && in_array(substr($digitsOnlyIdentifier, 0, 1), ['7', '1'])) {
+            $nationalNumber = $digitsOnlyIdentifier;
+            $variants[] = '0' . $nationalNumber;
+            $variants[] = '254' . $nationalNumber;
+        }
+
+        if ($nationalNumber) {
+            $variants[] = '+254' . $nationalNumber;
+        }
+
+        return array_values(array_unique(array_filter($variants)));
     }
 
     private function proceedToLogin(User $row, string $password, string $uuid): JsonResponse

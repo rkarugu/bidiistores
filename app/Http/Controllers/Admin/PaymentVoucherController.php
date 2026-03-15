@@ -326,6 +326,7 @@ class PaymentVoucherController extends Controller
 
 
         $supplier = WaSupplier::where('supplier_code', $code)->firstOrFail();
+        $user = getLoggeduserProfile();
 
         // Check for recent duplicate submission
         $lastVoucher = PaymentVoucher::where('wa_supplier_id', $supplier->id)
@@ -1380,7 +1381,7 @@ class PaymentVoucherController extends Controller
 
         $settings = getAllSettings();
 
-        $branch = Restaurant::find(10);
+        $branch = Restaurant::find(auth()->user()->restaurant_id);
 
         $qr_code = QrCode::generate(
             $voucher->number . " - " . $voucher->supplier->name . " - " . manageAmountFormat($voucher->amount) . " - " . $voucher->created_at->format('d/m/Y H:i'),

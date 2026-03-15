@@ -141,6 +141,13 @@ function salesAndReceivablesPermissionFunction()
                                         'reassign' => 'reassign'
                                     ]
                                 ],
+                                'Merge Routes' => [
+                                    'model' => 'route-merge',
+                                    'permissions' => [
+                                        'view' => 'view',
+                                        'add' => 'add'
+                                    ]
+                                ],
                             ]
                         ],
                         'Reconciliation' => [

@@ -165,6 +165,7 @@
                             style="position: fixed;bottom: 30%;left:4%;"><i class="fa fa-plus"
                                 aria-hidden="true"></i></button>
 
+                        @if(config('app.use_trade_agreements'))
                         <button type="button" class="btn btn-danger btn-sm tradeAgreement" data-toggle="modal"
                             data-target="#tradeAgreement" style="position: fixed;top: 30%;right:0%;"><i
                                 class="fa fa-check-circle" aria-hidden="true"></i>
@@ -191,6 +192,7 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
                         <span id = "requisitionitemtable">
                             <table class="table table-bordered table-hover" id="mainItemTable">
                                 <thead>
@@ -320,6 +322,7 @@
     <link rel="stylesheet" href="{{ asset('assets/admin/dist/datepicker.css') }}">
 
     <style type="text/css">
+        @if(config('app.use_trade_agreements'))
         .tradeAgreement {
             display: none;
         }
@@ -339,6 +342,7 @@
             display: none;
             font-size: 13px
         }
+        @endif
 
         .select2 {
             width: 100% !important;
@@ -724,10 +728,12 @@ display:none;
             });
         }
 
+        @if(config('app.use_trade_agreements'))
         $('#wa_supplier_id').change(function(e) {
             load_supplier_discounts();
             $('.tradeAgreement').css('display', 'flex');
         });
+        @endif
         $('.input_supplier_own').change(function(e) {
             if ($(this).val() == "OwnCollection") {
                 $('.hideme_supplier_own').show();

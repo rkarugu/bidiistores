@@ -1103,10 +1103,31 @@ class InventoryItemController extends Controller
 
                 if ($request->suppliers) {
                     foreach ($request->suppliers as $supplier) {
+                        // Create pivot table entry
                         $supplierData = new WaInventoryItemSupplier();
                         $supplierData->wa_inventory_item_id = $row->id;
                         $supplierData->wa_supplier_id = $supplier;
                         $supplierData->save();
+                        
+                        // Automatically create purchase data entry with defaults
+                        $purchaseData = new \App\Model\WaInventoryItemSupplierData();
+                        $purchaseData->wa_supplier_id = $supplier;
+                        $purchaseData->wa_inventory_item_id = $row->id;
+                        $purchaseData->currency = 'KES'; // Default currency
+                        $purchaseData->price = $row->standard_cost ?? $row->price_list_cost ?? 0;
+                        $purchaseData->price_effective_from = date('Y-m-d');
+                        $purchaseData->our_unit_of_measure = $row->getUnitOfMeausureDetail ? $row->getUnitOfMeausureDetail->title : 'Each';
+                        $purchaseData->supplier_stock_code = $row->alt_code ?? '';
+                        $purchaseData->supplier_stock_description = $row->title ?? '';
+                        $purchaseData->preferred_supplier = 'Yes'; // Default to Yes
+                        $purchaseData->save();
+                        
+                        // Create price history
+                        $price = new \App\Model\WaInventoryItemSupplierPrices();
+                        $price->wa_inventory_item_supplier_id = $purchaseData->id;
+                        $price->price = $purchaseData->price;
+                        $price->status = 'Current';
+                        $price->save();
                     }
                 }
 
@@ -2660,6 +2681,13 @@ class InventoryItemController extends Controller
             $data['inventoryItem'] = \App\Model\WaInventoryItem::findOrFail($stockid);
             $data['currencys'] = \App\Model\WaCurrencyManager::get();
             $data['units'] = \App\Model\WaUnitOfMeasure::get();
+            
+            // Get default values for prefilling
+            $data['default_price'] = $data['inventoryItem']->standard_cost ?? $data['inventoryItem']->prev_standard_cost ?? 0;
+            $data['default_supplier_code'] = $data['inventoryItem']->alt_code ?? '';
+            $data['default_description'] = $data['inventoryItem']->title ?? '';
+            $data['default_date'] = date('Y-m-d'); // Today's date
+            
             return view('admin.maintaininvetoryitems.purchaseData.purchaseDataAdd')->with($data);
         } catch (\Throwable $th) {
             Session::flash('warning', 'Something went wrong');
@@ -2748,6 +2776,7 @@ class InventoryItemController extends Controller
             ]);
         }
         $suplier = DB::transaction(function () use ($request) {
+            // Create supplier data entry
             $suplier = new \App\Model\WaInventoryItemSupplierData;
             $suplier->wa_supplier_id = $request->supplier;
             $suplier->wa_inventory_item_id = $request->stockid;
@@ -2763,11 +2792,20 @@ class InventoryItemController extends Controller
             $suplier->lead_time_days = $request->lead_time ?? NULL;
             $suplier->preferred_supplier = $request->preferred_supplier;
             $suplier->save();
+            
+            // Create pivot table entry for item-supplier relationship
+            \App\Model\WaInventoryItemSupplier::firstOrCreate([
+                'wa_supplier_id' => $request->supplier,
+                'wa_inventory_item_id' => $request->stockid
+            ]);
+            
+            // Create price history
             $price = new \App\Model\WaInventoryItemSupplierPrices;
             $price->wa_inventory_item_supplier_id = $suplier->id;
             $price->price = $suplier->price;
             $price->status = 'Current';
             $price->save();
+            
             return $suplier;
         });
         if ($suplier) {
@@ -2821,6 +2859,13 @@ class InventoryItemController extends Controller
             $suplier->lead_time_days = $request->lead_time ?? NULL;
             $suplier->preferred_supplier = $request->preferred_supplier;
             $suplier->save();
+            
+            // Ensure pivot table entry exists
+            \App\Model\WaInventoryItemSupplier::firstOrCreate([
+                'wa_supplier_id' => $suplier->wa_supplier_id,
+                'wa_inventory_item_id' => $suplier->wa_inventory_item_id
+            ]);
+            
             \App\Model\WaInventoryItemSupplierPrices::where('wa_inventory_item_supplier_id', $suplier->id)->update(['status' => 'Old']);
             $price = new \App\Model\WaInventoryItemSupplierPrices;
             $price->wa_inventory_item_supplier_id = $suplier->id;
